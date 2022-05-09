@@ -23,7 +23,8 @@ async function run() {
         app.get('/fridgeItem', async (req, res) => {
             const query = (0);
             const cursor = fridgeCollection.find(query);
-            const fridgeItems = await cursor.toArray();
+            //max 6 item can show on homepage
+            const fridgeItems = await cursor.limit(6).toArray();
             res.send(fridgeItems);
         });
 
@@ -32,6 +33,13 @@ async function run() {
             const query = { _id: ObjectId(id) };
             const fridgeItem = await fridgeCollection.findOne(query);
             res.send(fridgeItem);
+        });
+
+        //Post
+        app.post('/fridgeItem', async (req, res) => {
+            const newItem = req.body;
+            const result = await fridgeCollection.insertOne(newItem);
+            res.send(result);
         })
     }
     finally {
