@@ -24,7 +24,7 @@ async function run() {
             const query = (0);
             const cursor = fridgeCollection.find(query);
             //max 6 item can show on homepage
-            const fridgeItems = await cursor.limit(6).toArray();
+            const fridgeItems = await cursor.toArray();
             res.send(fridgeItems);
         });
 
@@ -39,6 +39,14 @@ async function run() {
         app.post('/fridgeItem', async (req, res) => {
             const newItem = req.body;
             const result = await fridgeCollection.insertOne(newItem);
+            res.send(result);
+        });
+
+        //delete
+        app.delete('/fridgeItem/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await fridgeCollection.deleteOne(query);
             res.send(result);
         })
     }
